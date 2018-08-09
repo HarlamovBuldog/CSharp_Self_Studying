@@ -335,4 +335,5 @@ ASALocalRun/
 *.sln
 *.csproj
 Properties/
+*.config
 #APP.*
