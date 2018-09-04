@@ -1,5 +1,4 @@
-﻿using Prism;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +7,21 @@ using System.Threading.Tasks;
 
 namespace VendingMachine.Model
 {
-    public class MoneyStack : BindableBase
+    public class ProductStack : BindableBase
     {
-        public MoneyStack(Banknote banknote, int amount)
+        public ProductStack(Product product, int amount)
         {
-            Banknote = banknote;
-            Amount = amount;
+            Product = product;
+            _amount = amount;
         }
+        public Product Product { get; }
 
-        public Banknote Banknote { get; }
+        private int _amount;
+        public int Amount
+        {
+            get { return _amount; }
+            set { SetProperty(ref _amount, value); }
+        }
 
         internal bool PullOne()
         {
@@ -27,14 +32,6 @@ namespace VendingMachine.Model
             }
             return false;
         }
-
         internal void PushOne() => ++Amount;
-
-        private int _amount;
-        public int Amount
-        {
-            get { return _amount; }
-            set { SetProperty(ref _amount, value); }
-        }
     }
 }

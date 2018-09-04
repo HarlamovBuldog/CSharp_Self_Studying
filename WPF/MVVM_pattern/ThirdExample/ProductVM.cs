@@ -8,15 +8,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using VendingMachine.Model;
 
 namespace ThirdExample
 {
-    public class ProductVM
+    public class ProductVM : BindableBase
     {
-        public Visibility IsBuyVisible { get; }
+        public ProductStack ProductStack { get; }
+
+        public ProductVM(ProductStack productStack, PurchaseManager manager = null)
+        {
+            ProductStack = productStack;
+            productStack.PropertyChanged += (s, a) => { RaisePropertyChanged(nameof(Amount)); };
+
+            if (manager != null)
+                BuyCommand = new DelegateCommand(() => {
+                    manager.BuyProduct(ProductStack.Product);
+                });
+        }
+
+        public Visibility IsBuyVisible => BuyCommand == null ? Visibility.Collapsed : Visibility.Visible;
         public DelegateCommand BuyCommand { get; }
-        public string Name { get; }
-        public string Price { get; }
-        public int Amount { get; }
+        public string Name => ProductStack.Product.Name;
+        public string Price => $"({ProductStack.Product.Price} руб.)";
+        public int Amount => ProductStack.Amount;
     }
 }
