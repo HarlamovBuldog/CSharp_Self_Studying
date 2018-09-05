@@ -22,8 +22,7 @@ namespace Cash_desk
     {
         public MainWindow()
         {
-            //InitializeComponent();
-        
+            InitializeComponent();
         }
     }
 }

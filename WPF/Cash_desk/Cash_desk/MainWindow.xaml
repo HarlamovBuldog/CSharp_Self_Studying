@@ -2,28 +2,32 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cash_desk"
         mc:Ignorable="d"
-        Title="Resource Sample" Height="160" Width="300"
-        Background="{DynamicResource WindowBackgroundBrush}">
+        Title="Cash_desk" Height="450" Width="800">
     <Window.Resources>
-        <sys:String x:Key="ComboBoxTitle">Items:</sys:String>
-
-        <x:Array x:Key="ComboBoxItems" Type="sys:String">
-            <sys:String>Item #1</sys:String>
-            <sys:String>Item #2</sys:String>
-            <sys:String>Item #3</sys:String>
-        </x:Array>
-
-        <LinearGradientBrush x:Key="WindowBackgroundBrush">
-            <GradientStop Offset="0" Color="Silver"/>
-            <GradientStop Offset="1" Color="Gray"/>
-        </LinearGradientBrush>
     </Window.Resources>
-    <StackPanel Margin="10">
-        <Label Content="{StaticResource ComboBoxTitle}" />
-        <ComboBox ItemsSource="{StaticResource ComboBoxItems}" />
-    </StackPanel>
+    <Grid>
+        
+    </Grid>
+
+    <!-- Шаблон данных для страницы просмотра и добавления групп -->
+        <DataTemplate DataType="{x:Type local:ProductGroupVM}">
+            <WrapPanel Orientation="Horizontal">
+                <Button Content="" Command="{Binding AddGroupCommand}" />
+                <Button Content="{Binding GroupContent}" Command="{Binding GetGroupInfoCommand}" />
+            </WrapPanel>
+        </DataTemplate>
+        <!-- Шаблон данных для страницы просмотра и добавления элементов внутри группы -->
+        <DataTemplate DataType="{x:Type local:ProductChildVM}">
+            <WrapPanel Orientation="Horizontal">
+                <Button Content="" Command="{Binding AddChildCommand}" />
+                <Button Content="{Binding ChildContent}" Command="{Binding GetChildInfoCommand}" />
+            </WrapPanel>
+        </DataTemplate>
+    
+    <Window.DataContext>
+        <local:MainViewVM/>
+    </Window.DataContext>
 </Window>
