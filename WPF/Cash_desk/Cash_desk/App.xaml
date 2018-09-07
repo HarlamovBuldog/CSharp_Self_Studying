@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Cash_desk"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Dictionary1.xaml"/>
     </Application.Resources>
 </Application>

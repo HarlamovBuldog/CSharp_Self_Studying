@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using System.Windows.Media.Animation;
 
 namespace Cash_desk
 {
@@ -23,6 +26,23 @@ namespace Cash_desk
         public MainWindow()
         {
             InitializeComponent();
+            Style = (Style)FindResource(typeof(Window));
+            Messenger.Default.Register<NavigateMessage>(this, (action) => ShowUserControl(action));
+            Messenger.Default.Register<UserMessage>(this, (action) => ReceiveUserMessage(action));
+            this.DataContext = new MainWindowViewModel();
+        }
+
+        private void ReceiveUserMessage(UserMessage msg)
+        {
+            //UIMessage.Opacity = 1;
+            //UIMessage.Text = msg.Message;
+            Storyboard sb = (Storyboard)this.FindResource("FadeUIMessage");
+            sb.Begin();
+        }
+
+        private void ShowUserControl(NavigateMessage nm)
+        {
+            EditFrame.Content = nm.View;
         }
     }
 }

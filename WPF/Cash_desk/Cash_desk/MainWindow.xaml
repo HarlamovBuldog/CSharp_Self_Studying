@@ -6,28 +6,29 @@
         xmlns:local="clr-namespace:Cash_desk"
         mc:Ignorable="d"
         Title="Cash_desk" Height="450" Width="800">
-    <Window.Resources>
-    </Window.Resources>
-    <Grid>
-        
-    </Grid>
 
-    <!-- Шаблон данных для страницы просмотра и добавления групп -->
-        <DataTemplate DataType="{x:Type local:ProductGroupVM}">
-            <WrapPanel Orientation="Horizontal">
-                <Button Content="" Command="{Binding AddGroupCommand}" />
-                <Button Content="{Binding GroupContent}" Command="{Binding GetGroupInfoCommand}" />
-            </WrapPanel>
-        </DataTemplate>
-        <!-- Шаблон данных для страницы просмотра и добавления элементов внутри группы -->
-        <DataTemplate DataType="{x:Type local:ProductChildVM}">
-            <WrapPanel Orientation="Horizontal">
-                <Button Content="" Command="{Binding AddChildCommand}" />
-                <Button Content="{Binding ChildContent}" Command="{Binding GetChildInfoCommand}" />
-            </WrapPanel>
-        </DataTemplate>
-    
-    <Window.DataContext>
-        <local:MainViewVM/>
-    </Window.DataContext>
+    <Grid>
+        <ListView ItemsSource="{Binding Commands}" BorderBrush="Transparent" FontSize="12" FontWeight="Bold" 
+                              ScrollViewer.CanContentScroll="False">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Button Command="{Binding Send}" 
+                                            BorderThickness="0" 
+                                            Margin="0" Padding="0" 
+                                            >
+                        <!-- <Path Data="{Binding IconGeometry}" Stretch="Uniform" Fill="{StaticResource MidDullBrush}" Width="32" Height="32"/> -->
+                        <Button.ToolTip>
+                            <TextBlock Text="{Binding CommandDisplay}"/>
+                        </Button.ToolTip>
+                    </Button>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Frame x:Name="EditFrame" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"  NavigationUIVisibility="Hidden"/>
+    </Grid>
 </Window>
