@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:vm="clr-namespace:DemoApp.ViewModel"
     >
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">

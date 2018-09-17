@@ -4,26 +4,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     >
-    <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding AllGroups}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
-                            Command="{Binding Path=GetChildsCommand}"    
-                            BorderBrush="Black"
-                            Content="{Binding Path=Name}"
-                            Margin="5 5 5 5" 
-                            Height="50" Width="50"
-                            />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
-    </Grid>
+            <Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding DataContext.GetChildsCommands, 
+                                        RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!--Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"-->
+                                <Button Command="{Binding Command}"    
+                                        BorderBrush="Black"
+                                        Content="{Binding DisplayName}"
+                                        Margin="5 5 5 5" 
+                                        Height="50" Width="80"
+                                />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 </UserControl>

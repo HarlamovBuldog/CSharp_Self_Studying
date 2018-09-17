@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Data;
 using DemoApp.DataAccess;
 using DemoApp.Properties;
+using DemoApp.Model;
 
 namespace DemoApp.ViewModel
 {
@@ -16,25 +17,6 @@ namespace DemoApp.ViewModel
         #region Fields
 
         readonly GroupRepository _groupRepository;
-        readonly ChildRepository _childRepository;
-        CommandViewModel _getChildsCommand;
-
-        public CommandViewModel GetChildsCommand
-        {
-            get
-            {
-                if (_getChildsCommand == null)
-                {
-                    CommandViewModel cmd = new CommandViewModel(
-                        new RelayCommand(param => this.ShowAllChilds())
-                        );
-                    _getChildsCommand = cmd;        
-                }
-                return _getChildsCommand;
-            }
-        }
-
-        ObservableCollection<WorkspaceViewModel> _childWorkspaces;
 
         #endregion // Fields
 
@@ -55,8 +37,6 @@ namespace DemoApp.ViewModel
             // Populate the AllGroups collection with GroupViewModels.
             this.CreateAllGroups();
 
-            //
-            _childRepository = new ChildRepository("Data/childs.xml");
         }
 
         void CreateAllGroups()
@@ -73,45 +53,6 @@ namespace DemoApp.ViewModel
         }
 
         #endregion // Constructor
-
-        #region Workspaces
-
-        /// <summary>
-        /// Returns the collection of available workspaces to display.
-        /// A 'workspace' is a ViewModel that can request to be closed.
-        /// </summary>
-        public ObservableCollection<WorkspaceViewModel> ChildWorkspaces
-        {
-            get
-            {
-                if (_childWorkspaces == null)
-                {
-                    _childWorkspaces = new ObservableCollection<WorkspaceViewModel>();
-                    _childWorkspaces.CollectionChanged += this.OnWorkspacesChanged;
-                }
-                return _childWorkspaces;
-            }
-        }
-
-        void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null && e.NewItems.Count != 0)
-                foreach (WorkspaceViewModel workspace in e.NewItems)
-                    workspace.RequestClose += this.OnWorkspaceRequestClose;
-
-            if (e.OldItems != null && e.OldItems.Count != 0)
-                foreach (WorkspaceViewModel workspace in e.OldItems)
-                    workspace.RequestClose -= this.OnWorkspaceRequestClose;
-        }
-
-        void OnWorkspaceRequestClose(object sender, EventArgs e)
-        {
-            WorkspaceViewModel workspace = sender as WorkspaceViewModel;
-            workspace.Dispose();
-            this.ChildWorkspaces.Remove(workspace);
-        }
-
-        #endregion // Workspaces
 
         #region Public Interface
 
@@ -150,36 +91,6 @@ namespace DemoApp.ViewModel
         }
 
         #endregion // Base Class Overrides
-
-        #region Private Helpers
-
-        void ShowAllChilds()
-        {
-
-            AllChildsViewModel workspace =
-                this.ChildWorkspaces.FirstOrDefault(vm => vm is AllChildsViewModel)
-                as AllChildsViewModel;
-
-            if (workspace == null)
-            {
-                workspace = new AllChildsViewModel(_childRepository);
-                this.ChildWorkspaces.Add(workspace);
-            }
-
-            this.SetActiveWorkspace(workspace);
-
-        }
-
-        void SetActiveWorkspace(WorkspaceViewModel workspace)
-        {
-            Debug.Assert(this.ChildWorkspaces.Contains(workspace));
-
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.ChildWorkspaces);
-            if (collectionView != null)
-                collectionView.MoveCurrentTo(workspace);
-        }
-
-        #endregion // Private Helpers
 
         #region Event Handling Methods
 
