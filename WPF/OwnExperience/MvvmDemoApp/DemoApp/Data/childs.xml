@@ -2,6 +2,8 @@
 <childs>
   <child code="86" name="Type1" simpleName="T1" groupCode="85" imgPath="undef"/>
   <child code="80" name="Type2" simpleName="T2" groupCode="85" imgPath="undef"/>
-  <child code="81" name="Type3" simpleName="T3" groupCode="85" imgPath="undef"/>
-  <child code="83" name="Type4" simpleName="T4" groupCode="85" imgPath="undef"/>
+  <child code="81" name="Type3" simpleName="T3" groupCode="78" imgPath="undef"/>
+  <child code="83" name="Type4" simpleName="T4" groupCode="78" imgPath="undef"/>
+  <child code="79" name="Type5" simpleName="T5" groupCode="56" imgPath="undef"/>
+  <child code="55" name="Type6" simpleName="T6" groupCode="56" imgPath="undef"/>
 </childs>
