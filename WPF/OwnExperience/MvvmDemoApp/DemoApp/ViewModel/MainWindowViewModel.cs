@@ -24,8 +24,34 @@ namespace DemoApp.ViewModel
         readonly GroupRepository _groupRepository;
         readonly ChildRepository _childRepository;
         ObservableCollection<WorkspaceViewModel> _workspaces;
+        string _curVMDisplayName;
 
         #endregion // Fields
+
+        #region State Properties
+
+        /// <summary>
+        /// Returns a string DisplayName 
+        /// of currently opened Workspace.
+        /// Used for databinding with title 
+        /// of container representing workspace area.
+        /// </summary>
+        public string CurVMDisplayName
+        {
+            get
+            {
+                return _curVMDisplayName;
+            }
+            set
+            {
+                if (_curVMDisplayName != value)
+                {
+                    _curVMDisplayName = value;
+                    OnPropertyChanged("CurVMDisplayName");
+                }
+            }
+        }
+        #endregion // State Properties
 
         #region Constructor
 
@@ -36,6 +62,7 @@ namespace DemoApp.ViewModel
             _customerRepository = new CustomerRepository(customerDataFile[0]);
             _groupRepository = new GroupRepository(customerDataFile[1]);
             _childRepository = new ChildRepository(customerDataFile[2]);
+            _curVMDisplayName = this.DisplayName;
         }
 
         #endregion // Constructor
@@ -78,6 +105,8 @@ namespace DemoApp.ViewModel
                 new CommandViewModel(
                     Strings.MainWindowViewModel_Command_CreateNewGroup,
                     new RelayCommand(param => this.CreateNewGroup()))
+
+                //Edit and Delete commands next in list
             };
         }
 
@@ -219,6 +248,7 @@ namespace DemoApp.ViewModel
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
             if (collectionView != null)
                 collectionView.MoveCurrentTo(workspace);
+            CurVMDisplayName = workspace.DisplayName;
         }
 
         #endregion // Private Helpers

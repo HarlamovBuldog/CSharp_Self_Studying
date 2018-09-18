@@ -53,7 +53,7 @@
         <HeaderedContentControl 
           Content="{Binding Path=Workspaces}"
           ContentTemplate="{StaticResource WorkspacesTemplate}"
-          Header="Workspaces"
+          Header="{Binding Path=CurVMDisplayName}"
           Style="{StaticResource MainHCCStyle}"
           />
       </Border>
