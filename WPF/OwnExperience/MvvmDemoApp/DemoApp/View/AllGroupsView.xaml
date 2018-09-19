@@ -2,6 +2,7 @@
     x:Class="DemoApp.View.AllGroupsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:bh="clr-namespace:DemoApp.Behavior"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     >
             <Grid>
@@ -16,12 +17,13 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <!--Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"-->
-                                <Button Command="{Binding Command}"    
+                                <Button bh:MouseDoubleClick.Command="{Binding Command}"    
                                         BorderBrush="Black"
                                         Content="{Binding DisplayName}"
                                         Margin="5 5 5 5" 
                                         Height="50" Width="80"
-                                />
+                                >
+                                </Button>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
