@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -27,11 +28,15 @@ namespace DemoApp.DataAccess
         /// Creates a new repository of childs.
         /// </summary>
         /// <param name="childDataFile">The relative path to an XML resource file that contains child data.</param>
-        public ChildRepository(string childDataFile)
+        public ChildRepository(ApplicContext dataContext)
         {
-            _childs = LoadChilds(childDataFile);
+            _childs = LoadChilds(dataContext);
         }
 
+        public ChildRepository(ChildRepository chRepo,int groupId)
+        {
+            _childs = chRepo.GetChildsBelongToGroup(groupId);
+        }
         #endregion // Constructor
 
         #region Public Interface
@@ -84,33 +89,26 @@ namespace DemoApp.DataAccess
 
         #region Private Helpers
 
-        static List<Child> LoadChilds(string childDataFile)
+        static List<Child> LoadChilds(ApplicContext db)
         {
-            // In a real application, the data would come from an external source,
-            // but for this demo let's keep things simple and use a resource file.
-            using (Stream stream = GetResourceStream(childDataFile))
-            using (XmlReader xmlRdr = new XmlTextReader(stream))
-                return
-                    (from childElem in XDocument.Load(xmlRdr).Element("childs").Elements("child")
-                     select Child.CreateChild(
-                        (int)childElem.Attribute("code"),
-                        (string)childElem.Attribute("name"),
-                        (string)childElem.Attribute("simpleName"),
-                        (int)childElem.Attribute("groupCode"),
-                        (string)childElem.Attribute("imgPath")
-                         )).ToList();
+            db.Childs.Load();
+            return db.Childs.Local.ToList();
         }
 
-        static Stream GetResourceStream(string resourceFile)
+
+        public List<Child> GetChildsBelongToGroup(int groupId)
         {
-            Uri uri = new Uri(resourceFile, UriKind.RelativeOrAbsolute);
-
-            StreamResourceInfo info = Application.GetResourceStream(uri);
-            if (info == null || info.Stream == null)
-                throw new ApplicationException("Missing resource file: " + resourceFile);
-
-            return info.Stream;
+            List<Child> children = new List<Child>();
+            foreach (Child child in _childs)
+            {
+                if (child.GroupCode == groupId)
+                {
+                    children.Add(child);
+                }
+            }
+            return children;
         }
+
 
         #endregion // Private Helpers
     }

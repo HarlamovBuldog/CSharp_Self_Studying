@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DemoApp.Properties;
@@ -12,6 +14,7 @@ namespace DemoApp.Model
     /// by the AllChildsViewModel class, which enables it to
     /// be easily displayed and edited by a WPF user interface.
     /// </summary>
+    [Table("Children")]
     public class Child : IDataErrorInfo
     {
         #region Creation
@@ -50,6 +53,7 @@ namespace DemoApp.Model
         /// <summary>
         /// Gets/sets the unique code for the child.
         /// </summary>
+        [Key]
         public int Code { get; set; }
 
         /// <summary>

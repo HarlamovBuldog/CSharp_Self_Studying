@@ -7,6 +7,7 @@ using System.Windows.Resources;
 using System.Xml;
 using System.Xml.Linq;
 using DemoApp.Model;
+using System.Data.Entity;
 
 namespace DemoApp.DataAccess
 {
@@ -27,9 +28,9 @@ namespace DemoApp.DataAccess
         /// Creates a new repository of groups.
         /// </summary>
         /// <param name="groupDataFile">The relative path to an XML resource file that contains group data.</param>
-        public GroupRepository(string groupDataFile)
+        public GroupRepository(ApplicContext dataContext)
         {
-            _groups = LoadGroups(groupDataFile);
+            _groups = LoadGroups(dataContext);
         }
 
         #endregion // Constructor
@@ -83,31 +84,10 @@ namespace DemoApp.DataAccess
         #endregion // Public Interface
 
         #region Private Helpers
-
-        static List<Group> LoadGroups(string groupDataFile)
+        static List<Group> LoadGroups(ApplicContext db)
         {
-            // In a real application, the data would come from an external source,
-            // but for this demo let's keep things simple and use a resource file.
-            using (Stream stream = GetResourceStream(groupDataFile))
-            using (XmlReader xmlRdr = new XmlTextReader(stream))
-                return
-                    (from groupElem in XDocument.Load(xmlRdr).Element("groups").Elements("group")
-                     select Group.CreateGroup(
-                        (int)groupElem.Attribute("id"),
-                        (string)groupElem.Attribute("name"),
-                        (string)groupElem.Attribute("imgPath")
-                         )).ToList();
-        }
-
-        static Stream GetResourceStream(string resourceFile)
-        {
-            Uri uri = new Uri(resourceFile, UriKind.RelativeOrAbsolute);
-
-            StreamResourceInfo info = Application.GetResourceStream(uri);
-            if (info == null || info.Stream == null)
-                throw new ApplicationException("Missing resource file: " + resourceFile);
-
-            return info.Stream;
+            db.Groups.Load();
+            return db.Groups.Local.ToList();
         }
 
         #endregion // Private Helpers

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using DemoApp.Properties;
@@ -12,6 +14,7 @@ namespace DemoApp.Model
     /// by the AllGroupsViewModel class, which enables it to
     /// be easily displayed and edited by a WPF user interface.
     /// </summary>
+    [Table("Groups")]
     public class Group : IDataErrorInfo
     {
         #region Creation
@@ -46,6 +49,7 @@ namespace DemoApp.Model
         /// <summary>
         /// Gets/sets the unique id for the group.
         /// </summary>
+        [Key]
         public int Id { get; set; }
 
         /// <summary>

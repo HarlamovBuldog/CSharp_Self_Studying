@@ -18,11 +18,14 @@ namespace DemoApp.ViewModel
     public class MainWindowViewModel : WorkspaceViewModel
     {
         #region Fields
+        //Note:need to get clear if it is good to set appContext like this
+        ApplicContext dataBase;
         ReadOnlyCollection<CommandViewModel> _getChildsCommands;
         ReadOnlyCollection<CommandViewModel> _commands;
         readonly CustomerRepository _customerRepository;
         readonly GroupRepository _groupRepository;
         readonly ChildRepository _childRepository;
+        //Dictionary<string, ReadOnlyCollection<CommandViewModel>> _commandsExecByChilds;
         ObservableCollection<WorkspaceViewModel> _workspaces;
         string _curVMDisplayName;
 
@@ -58,10 +61,10 @@ namespace DemoApp.ViewModel
         public MainWindowViewModel(string[] customerDataFile)
         {
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
-
+            dataBase = new ApplicContext();
             _customerRepository = new CustomerRepository(customerDataFile[0]);
-            _groupRepository = new GroupRepository(customerDataFile[1]);
-            _childRepository = new ChildRepository(customerDataFile[2]);
+            _groupRepository = new GroupRepository(dataBase);
+            _childRepository = new ChildRepository(dataBase);
             _curVMDisplayName = this.DisplayName;
         }
 
@@ -130,7 +133,7 @@ namespace DemoApp.ViewModel
             {
                 cmds.Add(new CommandViewModel(
                     gr.Name,
-                    new RelayCommand(param => this.ShowAllChilds())
+                    new RelayCommand(param => this.ShowAllChilds(gr.Id))
                     ));
             }
             return cmds;
@@ -224,19 +227,11 @@ namespace DemoApp.ViewModel
             this.SetActiveWorkspace(workspace);
         }
 
-        void ShowAllChilds()
+        void ShowAllChilds(int groupId)
         {
-
-            AllChildsViewModel workspace =
-                this.Workspaces.FirstOrDefault(vm => vm is AllChildsViewModel)
-                as AllChildsViewModel;
-
-            if (workspace == null)
-            {
-                workspace = new AllChildsViewModel(_childRepository);
-                this.Workspaces.Add(workspace);
-            }
-
+            AllChildsViewModel workspace = 
+                new AllChildsViewModel(new ChildRepository(_childRepository, groupId));
+            this.Workspaces.Add(workspace);
             this.SetActiveWorkspace(workspace);
 
         }
