@@ -44,8 +44,8 @@ namespace DemoApp.ViewModel
         void CreateAllChilds()
         {
             List<ChildViewModel> all =
-                (from cust in _childRepository.GetChilds()
-                 select new ChildViewModel(cust, _childRepository)).ToList();
+                (from child in _childRepository.GetChilds()
+                 select new ChildViewModel(child, _childRepository)).ToList();
 
             foreach (ChildViewModel cvm in all)
                 cvm.PropertyChanged += this.OnChildViewModelPropertyChanged;

@@ -106,7 +106,7 @@ This resource dictionary is used by the MainWindow.
       </Setter.Value>
     </Setter>
   </Style>
-
+    
   <!--
   This style ensures that the borders in the main window are consistent.
   -->
@@ -119,18 +119,20 @@ This resource dictionary is used by the MainWindow.
   </Style>
 
   <!--
-  This template explains how to render the list of commands on the left
-  side in the main window (the 'Control Panel' area).
+  This template explains how to render the list of common commands.
   -->
   <DataTemplate x:Key="CommandsTemplate">
-    <ItemsControl IsTabStop="False" ItemsSource="{Binding}" Margin="6,2">
+    <ItemsControl ItemsSource="{Binding}" Margin="6,2">
+        <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
       <ItemsControl.ItemTemplate>
         <DataTemplate>
-          <TextBlock Margin="2,6">
-            <Hyperlink Command="{Binding Path=Command}">
-              <TextBlock Text="{Binding Path=DisplayName}" />
-            </Hyperlink>
-          </TextBlock>
+              <Button Command="{Binding Path=Command}" 
+                      Content="{Binding Path=DisplayName}"
+                      Margin="2,6"/>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
