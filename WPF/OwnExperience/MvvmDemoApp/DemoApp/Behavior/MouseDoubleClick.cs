@@ -2,8 +2,27 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 
+/*
+ In view we set something like this
+ <UserControl ...
+ xmlns:bh="clr-namespace:DemoApp.Behavior"
+ ...>
+ ...
+<Button bh:MouseDoubleClick.Command="{Binding Command}"    
+                                        BorderBrush="Black"
+                                        Content="{Binding DisplayName}"
+                                        Margin="5 5 5 5" 
+                                        Height="50" Width="80"
+                                >
+...
+bh:MouseDoubleClick.Command     So this string is exactly changing behavior for MouseDoubleClick
+*/
+
 namespace DemoApp.Behavior
 {
+    /// <summary>
+    /// Class using DependencyProperty for changing behaviour of Mouse DoubleClick event
+    /// </summary>
     public class MouseDoubleClick
     {
         public static DependencyProperty CommandProperty =
