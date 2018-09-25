@@ -27,6 +27,7 @@ namespace DemoApp.ViewModel
         readonly ChildRepository _childRepository;
         //Dictionary<string, ReadOnlyCollection<CommandViewModel>> _commandsExecByChilds;
         ObservableCollection<WorkspaceViewModel> _workspaces;
+        private WorkspaceViewModel _currentPageViewModel;
         string _curVMDisplayName;
 
         #endregion // Fields
@@ -54,6 +55,24 @@ namespace DemoApp.ViewModel
                 }
             }
         }
+
+        public WorkspaceViewModel CurrentPageViewModel
+        {
+            get
+            {
+                return _currentPageViewModel;
+            }
+            set
+            {
+                if (_currentPageViewModel != value)
+                {
+                    _currentPageViewModel = value;
+                    OnPropertyChanged("CurrentPageViewModel");
+                }
+            }
+        }
+
+
         #endregion // State Properties
 
         #region Constructor
@@ -63,7 +82,8 @@ namespace DemoApp.ViewModel
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
             dataBase = new ApplicContext();
             _customerRepository = new CustomerRepository(customerDataFile[0]);
-            _groupRepository = new GroupRepository(dataBase);
+            _groupRepository = new GroupRepository();
+            //make child repo to use Daper
             _childRepository = new ChildRepository(dataBase);
             _curVMDisplayName = this.DisplayName;
         }
@@ -107,9 +127,26 @@ namespace DemoApp.ViewModel
 
                 new CommandViewModel(
                     Strings.MainWindowViewModel_Command_CreateNewGroup,
+                    new RelayCommand(param => this.CreateNewGroup())),
+
+                new CommandViewModel(
+                    "Create",
+                    new RelayCommand(param => this.CreateNewGroup())),
+
+                new CommandViewModel(
+                    "Refresh",
+                    new RelayCommand(param => this.CreateNewGroup())),
+                //Do i actually need refresh? Guess i need to call it automatically
+                //each time i change something.
+                //Or this update means that db has changed externally. Not via programm.
+                new CommandViewModel(
+                    "Edit",
+                    new RelayCommand(param => this.CreateNewGroup())),
+
+                new CommandViewModel(
+                    "Delete",
                     new RelayCommand(param => this.CreateNewGroup()))
 
-                //Edit and Delete commands next in list
             };
         }
 
@@ -233,6 +270,7 @@ namespace DemoApp.ViewModel
                 new AllChildsViewModel(new ChildRepository(_childRepository, groupId));
             this.Workspaces.Add(workspace);
             this.SetActiveWorkspace(workspace);
+            //CurVMDisplayName += ">" + workspace.DisplayName; 
 
         }
 
@@ -242,8 +280,11 @@ namespace DemoApp.ViewModel
 
             ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
             if (collectionView != null)
+            {
                 collectionView.MoveCurrentTo(workspace);
-            CurVMDisplayName = workspace.DisplayName;
+            }
+            CurrentPageViewModel = workspace;
+            //CurVMDisplayName = workspace.DisplayName;
         }
 
         #endregion // Private Helpers

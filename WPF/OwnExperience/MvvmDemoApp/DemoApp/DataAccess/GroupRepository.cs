@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Configuration;
+using System.Data.SQLite;
 using System.Linq;
-using System.Windows;
-using System.Windows.Resources;
-using System.Xml;
-using System.Xml.Linq;
 using DemoApp.Model;
-using System.Data.Entity;
+using Dapper;
+using System.IO;
+using DemoApp.Properties;
 
 namespace DemoApp.DataAccess
 {
@@ -19,7 +18,7 @@ namespace DemoApp.DataAccess
         #region Fields
 
         readonly List<Group> _groups;
-
+        private static SQLiteConnection _dbConnection;
         #endregion // Fields
 
         #region Constructor
@@ -28,9 +27,10 @@ namespace DemoApp.DataAccess
         /// Creates a new repository of groups.
         /// </summary>
         /// <param name="groupDataFile">The relative path to an XML resource file that contains group data.</param>
-        public GroupRepository(ApplicContext dataContext)
+        public GroupRepository()
         {
-            _groups = LoadGroups(dataContext);
+            CreateAndOpenDb();
+            _groups = LoadGroups();
         }
 
         #endregion // Constructor
@@ -84,10 +84,33 @@ namespace DemoApp.DataAccess
         #endregion // Public Interface
 
         #region Private Helpers
-        static List<Group> LoadGroups(ApplicContext db)
+
+        static void CreateAndOpenDb()
         {
-            db.Groups.Load();
-            return db.Groups.Local.ToList();
+            var dbFilePath = Strings.DefaultDbFilePath;
+            if (!File.Exists(dbFilePath))
+            {
+                SQLiteConnection.CreateFile(dbFilePath);
+            }
+            _dbConnection =
+            new SQLiteConnection(ConfigurationManager.
+            ConnectionStrings["DefaultConnection"].ConnectionString);
+            //_dbConnection.Open();
+        }
+
+        static List<Group> LoadGroups()
+        {
+            // Ensure we have a connection
+            if (_dbConnection == null)
+            {
+                throw new NullReferenceException("Please provide a connection");
+            }
+
+            using (_dbConnection)
+            {
+                return _dbConnection.Query<Group>
+                    ("Select * From Groups").ToList();
+            }
         }
 
         #endregion // Private Helpers

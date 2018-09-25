@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AllChildsViewModel_DisplayName" xml:space="preserve">
     <value>All Childs</value>
@@ -181,6 +181,9 @@
     <value>Last name is missing</value>
     <comment>Error message for when a Customer is missing a last name.</comment>
   </data>
+  <data name="DefaultDbFilePath" xml:space="preserve">
+    <value>./Data/Cash_desk_db.db</value>
+  </data>
   <data name="GroupViewModel_DisplayName" xml:space="preserve">
     <value>New Group</value>
     <comment>The display name of a new Group object.</comment>
@@ -206,7 +209,7 @@
     <comment>Display name for the command that shows all groups.</comment>
   </data>
   <data name="MainWindowViewModel_DisplayName" xml:space="preserve">
-    <value>MVVM Demo App</value>
+    <value>Каталог</value>
     <comment>Title of the main window</comment>
   </data>
 </root>

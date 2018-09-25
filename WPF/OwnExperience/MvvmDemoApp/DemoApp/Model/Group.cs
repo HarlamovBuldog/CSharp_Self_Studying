@@ -14,7 +14,7 @@ namespace DemoApp.Model
     /// by the AllGroupsViewModel class, which enables it to
     /// be easily displayed and edited by a WPF user interface.
     /// </summary>
-    [Table("Groups")]
+    //[Table("Groups")]
     public class Group : IDataErrorInfo
     {
         #region Creation
@@ -49,7 +49,7 @@ namespace DemoApp.Model
         /// <summary>
         /// Gets/sets the unique id for the group.
         /// </summary>
-        [Key]
+       // [Key]
         public int Id { get; set; }
 
         /// <summary>

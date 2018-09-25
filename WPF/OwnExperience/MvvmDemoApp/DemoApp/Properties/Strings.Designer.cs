@@ -205,6 +205,15 @@ namespace DemoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ./Data/Cash_desk_db.db.
+        /// </summary>
+        public static string DefaultDbFilePath {
+            get {
+                return ResourceManager.GetString("DefaultDbFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to New Group.
         /// </summary>
         public static string GroupViewModel_DisplayName {
@@ -259,7 +268,7 @@ namespace DemoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MVVM Demo App.
+        ///   Looks up a localized string similar to Каталог.
         /// </summary>
         public static string MainWindowViewModel_DisplayName {
             get {
