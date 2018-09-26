@@ -182,5 +182,71 @@ This resource dictionary is used by the MainWindow.
         </ListView.ItemsPanel>
     </ListView>
   </DataTemplate>
+    
+    
+    <!--
+     This is tricky template for making radiobutton to look like 
+    simple button but with IsChecked Property. 
+    -->
+   <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="Focusable"
+                Value="False" />
+        <Setter Property="GroupName"
+                Value="filter" />
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <ControlTemplate.Resources>
 
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="VerticalAlignment"
+                                    Value="Center" />
+                            <Setter Property="HorizontalAlignment"
+                                    Value="Center" />
+                        </Style>
+
+                    </ControlTemplate.Resources>
+                    <Border x:Name="PART_border"
+                            CornerRadius="2"
+                            Margin="2"
+                            Background="Transparent"
+                            BorderThickness="1"
+                            BorderBrush="{x:Static SystemColors.ControlDarkBrush}"
+                            SnapsToDevicePixels="True">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ContentPresenter x:Name="PART_content" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked"
+                                 Value="True">
+                            <Setter TargetName="PART_content"
+                                    Property="TextBlock.FontWeight"
+                                    Value="Bold" />
+                            <Setter TargetName="PART_border"
+                                    Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                                         EndPoint="0,1">
+                                        <GradientStop Color="Black"
+                                                      Offset="0" />
+                                        <GradientStop Color="white"
+                                                      Offset="1" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style> 
+    
 </ResourceDictionary>

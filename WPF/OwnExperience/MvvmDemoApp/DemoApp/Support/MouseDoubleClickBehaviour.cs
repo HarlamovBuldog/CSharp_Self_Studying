@@ -18,23 +18,23 @@ using System.Windows.Input;
 bh:MouseDoubleClick.Command     So this string is exactly changing behavior for MouseDoubleClick
 */
 
-namespace DemoApp.Behavior
+namespace Support
 {
     /// <summary>
     /// Class using DependencyProperty for changing behaviour of Mouse DoubleClick event
     /// </summary>
-    public class MouseDoubleClick
+    public class MouseDoubleClickBehaviour
     {
         public static DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached("Command",
             typeof(ICommand),
-            typeof(MouseDoubleClick),
+            typeof(MouseDoubleClickBehaviour),
             new UIPropertyMetadata(CommandChanged));
 
         public static DependencyProperty CommandParameterProperty =
             DependencyProperty.RegisterAttached("CommandParameter",
                                                 typeof(object),
-                                                typeof(MouseDoubleClick),
+                                                typeof(MouseDoubleClickBehaviour),
                                                 new UIPropertyMetadata(null));
 
         public static void SetCommand(DependencyObject target, ICommand value)

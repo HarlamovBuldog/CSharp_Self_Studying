@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Input;
 using DemoApp.DataAccess;
 using DemoApp.Model;
 using DemoApp.Properties;
@@ -29,6 +30,7 @@ namespace DemoApp.ViewModel
         ObservableCollection<WorkspaceViewModel> _workspaces;
         private WorkspaceViewModel _currentPageViewModel;
         string _curVMDisplayName;
+        RelayCommand _returnBackCommand;
 
         #endregion // Fields
 
@@ -86,11 +88,26 @@ namespace DemoApp.ViewModel
             //make child repo to use Daper
             _childRepository = new ChildRepository(dataBase);
             _curVMDisplayName = this.DisplayName;
+            this.ShowAllGroups();
         }
 
         #endregion // Constructor
 
         #region Commands
+
+        public ICommand ReturnBackCommand
+        {
+            get
+            {
+                if (_returnBackCommand == null)
+                {
+                    _returnBackCommand = new RelayCommand(
+                        param => this.ReturnBack()
+                        );
+                }
+                return _returnBackCommand;
+            }
+        }
 
         /// <summary>
         /// Returns a read-only list of commands 
@@ -120,14 +137,6 @@ namespace DemoApp.ViewModel
                 new CommandViewModel(
                     Strings.MainWindowViewModel_Command_CreateNewCustomer,
                     new RelayCommand(param => this.CreateNewCustomer())),
-
-                new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_ViewAllGroups,
-                    new RelayCommand(param => this.ShowAllGroups())),
-
-                new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_CreateNewGroup,
-                    new RelayCommand(param => this.CreateNewGroup())),
 
                 new CommandViewModel(
                     "Create",
@@ -285,6 +294,12 @@ namespace DemoApp.ViewModel
             }
             CurrentPageViewModel = workspace;
             //CurVMDisplayName = workspace.DisplayName;
+        }
+
+        void ReturnBack()
+        {
+            CurrentPageViewModel = Workspaces.Single(vm => vm is AllGroupsViewModel)
+                as AllGroupsViewModel;
         }
 
         #endregion // Private Helpers

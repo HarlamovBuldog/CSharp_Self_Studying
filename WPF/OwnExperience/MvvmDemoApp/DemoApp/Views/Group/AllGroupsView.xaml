@@ -2,7 +2,7 @@
     x:Class="DemoApp.View.AllGroupsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:bh="clr-namespace:DemoApp.Behavior"
+    xmlns:bh="clr-namespace:Support"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     >
             <Grid>
@@ -16,14 +16,15 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <!--Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"-->
-                                <Button bh:MouseDoubleClick.Command="{Binding Command}"    
+                                <!-- Radio button template was changed
+                                You can find its changed template in MainWindowResources.xaml-->
+                                <RadioButton bh:MouseDoubleClickBehaviour.Command="{Binding Command}"    
                                         BorderBrush="Black"
                                         Content="{Binding DisplayName}"
                                         Margin="5 5 5 5" 
-                                        Height="50" Width="80"
+                                        Height="70" Width="120"
                                 >
-                                </Button>
+                                </RadioButton>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
