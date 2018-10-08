@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Data;
 using DemoApp.DataAccess;
 using DemoApp.Properties;
-using DemoApp.Model;
+using DemoApp.Support;
 
 namespace DemoApp.ViewModel
 {
@@ -17,6 +15,7 @@ namespace DemoApp.ViewModel
         #region Fields
 
         readonly GroupRepository _groupRepository;
+
 
         #endregion // Fields
 
@@ -36,7 +35,24 @@ namespace DemoApp.ViewModel
 
             // Populate the AllGroups collection with GroupViewModels.
             this.CreateAllGroups();
+            
+        }
 
+        public AllGroupsViewModel(GroupRepository groupRepository,
+            ReadOnlyCollection<CommandViewModel> childsNavigateCommandList)
+        {
+            if (groupRepository == null)
+                throw new ArgumentNullException("groupRepository");
+
+            base.DisplayName = Strings.AllGroupsViewModel_DisplayName;
+
+            _groupRepository = groupRepository;
+
+            // Subscribe for notifications of when a new group is saved.
+            _groupRepository.GroupAdded += this.OnGroupAddedToRepository;
+
+            // Populate the AllGroups collection with GroupViewModels.
+            this.CreateAllGroups(childsNavigateCommandList);
         }
 
         void CreateAllGroups()
@@ -47,6 +63,27 @@ namespace DemoApp.ViewModel
 
             foreach (GroupViewModel gvm in all)
                 gvm.PropertyChanged += this.OnGroupViewModelPropertyChanged;
+
+            this.AllGroups = new ObservableCollection<GroupViewModel>(all);
+            this.AllGroups.CollectionChanged += this.OnCollectionChanged;
+        }
+
+        void CreateAllGroups(ReadOnlyCollection<CommandViewModel> childsNavigateCommandList)
+        {
+            List<GroupViewModel> all =
+                (from cust in _groupRepository.GetGroups()
+                 select new GroupViewModel(cust, _groupRepository)).ToList();
+
+            foreach (GroupViewModel gvm in all)
+            {
+                gvm.PropertyChanged += this.OnGroupViewModelPropertyChanged;
+                foreach (CommandViewModel cmndVM in childsNavigateCommandList)
+                {
+                    if (gvm.DisplayName == cmndVM.DisplayName)
+                        gvm.ChildsNavigateExecute = cmndVM.Command;
+                }
+                    
+            }
 
             this.AllGroups = new ObservableCollection<GroupViewModel>(all);
             this.AllGroups.CollectionChanged += this.OnCollectionChanged;
@@ -72,6 +109,18 @@ namespace DemoApp.ViewModel
                 return this.AllGroups.Sum(
                     custVM => custVM.IsSelected ? custVM.TotalSales : 0.0);
             }
+        }
+        */
+
+        public GroupViewModel SelectedGroup { get; set; }
+        /*
+        public bool IsPropertyEmpty(object obj)
+        {
+            var type = obj.GetType();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var hasProperty = properties.Select(x => x.GetValue(this, null))
+                                        .Any(x => !x.IsNullOrEmpty());
+            return !hasProperty;
         }
         */
 

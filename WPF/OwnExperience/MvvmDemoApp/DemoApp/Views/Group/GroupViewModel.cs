@@ -138,6 +138,10 @@ namespace DemoApp.ViewModel
             }
         }
 
+        public ICommand ChildsNavigateExecute { get; set; }
+
+
+
         #endregion // Presentation Properties
 
         #region Public Methods

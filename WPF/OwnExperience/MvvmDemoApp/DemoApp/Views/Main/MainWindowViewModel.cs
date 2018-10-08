@@ -10,6 +10,7 @@ using System.Windows.Input;
 using DemoApp.DataAccess;
 using DemoApp.Model;
 using DemoApp.Properties;
+using Support;
 
 namespace DemoApp.ViewModel
 {
@@ -19,11 +20,9 @@ namespace DemoApp.ViewModel
     public class MainWindowViewModel : WorkspaceViewModel
     {
         #region Fields
-        //Note:need to get clear if it is good to set appContext like this
-        ApplicContext dataBase;
+        
         ReadOnlyCollection<CommandViewModel> _getChildsCommands;
         ReadOnlyCollection<CommandViewModel> _commands;
-        readonly CustomerRepository _customerRepository;
         readonly GroupRepository _groupRepository;
         readonly ChildRepository _childRepository;
         //Dictionary<string, ReadOnlyCollection<CommandViewModel>> _commandsExecByChilds;
@@ -31,10 +30,28 @@ namespace DemoApp.ViewModel
         private WorkspaceViewModel _currentPageViewModel;
         string _curVMDisplayName;
         RelayCommand _returnBackCommand;
+        bool _enableEditCommands;
+//        ICommand _getChildsCommand;
 
         #endregion // Fields
 
         #region State Properties
+
+        public bool EnableEditCommands
+        {
+            get
+            {
+                return _enableEditCommands;
+            }
+            set
+            {
+                if (_enableEditCommands != value)
+                {
+                    _enableEditCommands = value;
+                    OnPropertyChanged("EnableEditCommands");
+                }
+            }
+        }
 
         /// <summary>
         /// Returns a string DisplayName 
@@ -82,13 +99,13 @@ namespace DemoApp.ViewModel
         public MainWindowViewModel(string[] customerDataFile)
         {
             base.DisplayName = Strings.MainWindowViewModel_DisplayName;
-            dataBase = new ApplicContext();
-            _customerRepository = new CustomerRepository(customerDataFile[0]);
             _groupRepository = new GroupRepository();
-            //make child repo to use Daper
-            _childRepository = new ChildRepository(dataBase);
+            _childRepository = new ChildRepository();
             _curVMDisplayName = this.DisplayName;
             this.ShowAllGroups();
+            //next string throws exception
+            //this.PropertyChanged += OnEnableEditCommandsPropertyChanged;
+            _enableEditCommands = true;
         }
 
         #endregion // Constructor
@@ -131,14 +148,6 @@ namespace DemoApp.ViewModel
             return new List<CommandViewModel>
             {
                 new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_ViewAllCustomers,
-                    new RelayCommand(param => this.ShowAllCustomers())),
-
-                new CommandViewModel(
-                    Strings.MainWindowViewModel_Command_CreateNewCustomer,
-                    new RelayCommand(param => this.CreateNewCustomer())),
-
-                new CommandViewModel(
                     "Create",
                     new RelayCommand(param => this.CreateNewGroup())),
 
@@ -179,11 +188,12 @@ namespace DemoApp.ViewModel
             {
                 cmds.Add(new CommandViewModel(
                     gr.Name,
-                    new RelayCommand(param => this.ShowAllChilds(gr.Id))
+                    new RelayCommand(param => this.ShowAllChildsInt(gr.Id))
                     ));
             }
             return cmds;
         }
+
         #endregion // Commands
 
         #region Workspaces
@@ -227,29 +237,6 @@ namespace DemoApp.ViewModel
 
         #region Private Helpers
 
-        void CreateNewCustomer()
-        {
-            Customer newCustomer = Customer.CreateNewCustomer();
-            CustomerViewModel workspace = new CustomerViewModel(newCustomer, _customerRepository);
-            this.Workspaces.Add(workspace);
-            this.SetActiveWorkspace(workspace);
-        }
-
-        void ShowAllCustomers()
-        {
-            AllCustomersViewModel workspace =
-                this.Workspaces.FirstOrDefault(vm => vm is AllCustomersViewModel)
-                as AllCustomersViewModel;
-
-            if (workspace == null)
-            {
-                workspace = new AllCustomersViewModel(_customerRepository);
-                this.Workspaces.Add(workspace);
-            }
-
-            this.SetActiveWorkspace(workspace);
-        }
-
         void CreateNewGroup()
         {
             Group newGroup = Group.CreateNewGroup();
@@ -266,17 +253,17 @@ namespace DemoApp.ViewModel
 
             if (workspace == null)
             {
-                workspace = new AllGroupsViewModel(_groupRepository);
+                workspace = new AllGroupsViewModel(_groupRepository, GetChildsCommands);
                 this.Workspaces.Add(workspace);
             }
 
             this.SetActiveWorkspace(workspace);
         }
-
-        void ShowAllChilds(int groupId)
+        
+        void ShowAllChildsInt(int groupId)
         {
             AllChildsViewModel workspace = 
-                new AllChildsViewModel(new ChildRepository(_childRepository, groupId));
+                new AllChildsViewModel(new ChildRepository(groupId));
             this.Workspaces.Add(workspace);
             this.SetActiveWorkspace(workspace);
             //CurVMDisplayName += ">" + workspace.DisplayName; 
@@ -303,5 +290,27 @@ namespace DemoApp.ViewModel
         }
 
         #endregion // Private Helpers
+
+        #region Event Handling Methods
+
+        void OnEnableEditCommandsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var allGrVM = _workspaces.Single(vm => vm is AllGroupsViewModel)
+                            as AllGroupsViewModel;
+
+            if (allGrVM.SelectedGroup == null ||
+                String.IsNullOrWhiteSpace(allGrVM.SelectedGroup.ToString()))
+            {
+                EnableEditCommands = false;
+            }
+            else
+            {
+                EnableEditCommands = true;
+            }
+
+            this.OnPropertyChanged("EnableEditCommands");
+        }
+
+        #endregion
     }
 }
