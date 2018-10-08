@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
+using System.Configuration;
+using System.Data.SQLite;
 using System.Linq;
-using System.Windows;
-using System.Windows.Resources;
-using System.Xml;
-using System.Xml.Linq;
+using Dapper;
+using System.IO;
+using DemoApp.Properties;
 using DemoApp.Model;
 
 namespace DemoApp.DataAccess
@@ -19,6 +18,7 @@ namespace DemoApp.DataAccess
         #region Fields
 
         readonly List<Child> _childs;
+        private static SQLiteConnection _dbConnection;
 
         #endregion // Fields
 
@@ -27,16 +27,19 @@ namespace DemoApp.DataAccess
         /// <summary>
         /// Creates a new repository of childs.
         /// </summary>
-        /// <param name="childDataFile">The relative path to an XML resource file that contains child data.</param>
-        public ChildRepository(ApplicContext dataContext)
+        public ChildRepository()
         {
-            _childs = LoadChilds(dataContext);
+            CreateAndOpenDb();
+            _childs = LoadChilds();
         }
 
-        public ChildRepository(ChildRepository chRepo,int groupId)
+        public ChildRepository(int groupId)
         {
-            _childs = chRepo.GetChildsBelongToGroup(groupId);
+            CreateAndOpenDb();
+            _childs = LoadChilds();
+            _childs = GetChildsBelongToGroup(groupId);
         }
+
         #endregion // Constructor
 
         #region Public Interface
@@ -89,10 +92,32 @@ namespace DemoApp.DataAccess
 
         #region Private Helpers
 
-        static List<Child> LoadChilds(ApplicContext db)
+        static void CreateAndOpenDb()
         {
-            db.Childs.Load();
-            return db.Childs.Local.ToList();
+            var dbFilePath = Strings.DefaultDbFilePath;
+            if (!File.Exists(dbFilePath))
+            {
+                SQLiteConnection.CreateFile(dbFilePath);
+            }
+            _dbConnection =
+            new SQLiteConnection(ConfigurationManager.
+            ConnectionStrings["DefaultConnection"].ConnectionString);
+            //_dbConnection.Open();
+        }
+
+        static List<Child> LoadChilds()
+        {
+            // Ensure we have a connection
+            if (_dbConnection == null)
+            {
+                throw new NullReferenceException("Please provide a connection");
+            }
+
+            using (_dbConnection)
+            {
+                return _dbConnection.Query<Child>
+                    ("Select * From Children").ToList();
+            }
         }
 
 
