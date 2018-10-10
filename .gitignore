@@ -332,8 +332,8 @@ ASALocalRun/
 .localhistory/	
 
 #Added by myself
-*.sln
-*.csproj
+#*.sln
+#*.csproj
 #Properties/
 #*.config
 #packages*

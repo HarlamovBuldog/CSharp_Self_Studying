@@ -9,22 +9,6 @@ This resource dictionary is used by the MainWindow.
   >
 
   <!-- 
-  This template applies an AllCustomersView to an instance 
-  of the AllCustomersViewModel class shown in the main window.
-  -->
-  <DataTemplate DataType="{x:Type vm:AllCustomersViewModel}">
-    <vw:AllCustomersView />
-  </DataTemplate>
-
-  <!-- 
-  This template applies a CustomerView to an instance  
-  of the CustomerViewModel class shown in the main window.
-  -->
-  <DataTemplate DataType="{x:Type vm:CustomerViewModel}">
-    <vw:CustomerView />
-  </DataTemplate>
-    
-  <!-- 
   This template applies an AllGroupsView to an instance 
   of the AllGroupsViewModel class shown in the main window.
   -->
@@ -132,7 +116,10 @@ This resource dictionary is used by the MainWindow.
         <DataTemplate>
               <Button Command="{Binding Path=Command}" 
                       Content="{Binding Path=DisplayName}"
-                      Margin="2,6"/>
+                      Margin="2,6"
+                      IsEnabled="{Binding DataContext.EnableEditCommands,
+                                RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                      />
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>

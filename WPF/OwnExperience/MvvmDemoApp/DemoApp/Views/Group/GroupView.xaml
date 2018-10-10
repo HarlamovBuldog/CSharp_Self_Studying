@@ -99,5 +99,16 @@
       Margin="4,2" 
       MinWidth="60" 
       />
+
+        <!-- BACK BUTTON -->
+        <Button 
+      Grid.Row="8" Grid.Column="2"
+      Command="{Binding DataContext.ReturnBackCommand, 
+                    RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+      Content="_Back"
+      HorizontalAlignment="Left"
+      Margin="4,2" 
+      MinWidth="60" 
+      />
     </Grid>
 </UserControl>

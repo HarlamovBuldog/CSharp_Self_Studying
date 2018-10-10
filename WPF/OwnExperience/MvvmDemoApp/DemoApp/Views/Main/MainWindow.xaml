@@ -11,7 +11,7 @@
   WindowStartupLocation="CenterScreen"
   >
   <Window.Resources>
-    <ResourceDictionary Source="MainWindowResources.xaml" />
+    <ResourceDictionary Source="../../Resources/MainWindowResources.xaml" />
   </Window.Resources>
 
   <DockPanel>

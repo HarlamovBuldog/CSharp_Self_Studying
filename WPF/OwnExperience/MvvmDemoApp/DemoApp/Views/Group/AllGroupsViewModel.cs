@@ -126,6 +126,26 @@ namespace DemoApp.ViewModel
 
         #endregion // Public Interface
 
+        #region CRUD Functions
+
+        protected override void CreateNew()
+        {
+        }
+        protected override void EditCurrent()
+        {
+        }
+        protected override void CommitUpdates()
+        {
+        }
+        protected override void DeleteCurrent()
+        {
+        }
+        protected override void RefreshData()
+        {
+        }
+
+        #endregion // CRUD Functions
+
         #region  Base Class Overrides
 
         protected override void OnDispose()
@@ -161,13 +181,13 @@ namespace DemoApp.ViewModel
             // Make sure that the property name we're referencing is valid.
             // This is a debugging technique, and does not execute in a Release build.
             (sender as GroupViewModel).VerifyPropertyName(IsSelected);
-            /*
+            
             // When a group is selected or unselected, we must let the
             // world know that the TotalSelectedSales property has changed,
             // so that it will be queried again for a new value.
             if (e.PropertyName == IsSelected)
-                this.OnPropertyChanged("TotalSelectedSales");
-             */
+                this.OnPropertyChanged("SelectedGroup");
+             
         }
 
         void OnGroupAddedToRepository(object sender, GroupAddedEventArgs e)

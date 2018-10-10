@@ -24,6 +24,26 @@ namespace DemoApp.ViewModel
 
         #endregion // Constructor
 
+        #region CRUD Functions
+
+        protected virtual void CreateNew()
+        {
+        }
+        protected virtual void EditCurrent()
+        {
+        }
+        protected virtual void CommitUpdates()
+        {
+        }
+        protected virtual void DeleteCurrent()
+        {
+        }
+        protected virtual void RefreshData()
+        {
+        }
+
+        #endregion // CRUD Functions
+
         #region CloseCommand
 
         /// <summary>
