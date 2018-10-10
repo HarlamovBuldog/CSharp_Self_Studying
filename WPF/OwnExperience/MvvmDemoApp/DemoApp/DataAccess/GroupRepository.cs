@@ -18,7 +18,6 @@ namespace DemoApp.DataAccess
         #region Fields
 
         readonly List<Group> _groups;
-        private static SQLiteConnection _dbConnection;
         #endregion // Fields
 
         #region Constructor
@@ -58,6 +57,22 @@ namespace DemoApp.DataAccess
 
                 if (this.GroupAdded != null)
                     this.GroupAdded(this, new GroupAddedEventArgs(group));
+
+                var DbConnection =
+            new SQLiteConnection(ConfigurationManager.
+            ConnectionStrings["DefaultConnection"].ConnectionString);
+
+                // Ensure we have a connection
+                if (DbConnection == null)
+                {
+                    throw new NullReferenceException("Please provide a connection");
+                }
+                using (DbConnection)
+                {
+                    string processQuery = "BEGIN TRANSACTION;INSERT INTO Groups VALUES (@Id, @Name, @ImgPath);COMMIT;";
+                    DbConnection.Execute(processQuery, group);
+                    DbConnection.Close();
+                }
             }
         }
 
@@ -92,23 +107,25 @@ namespace DemoApp.DataAccess
             {
                 SQLiteConnection.CreateFile(dbFilePath);
             }
-            _dbConnection =
-            new SQLiteConnection(ConfigurationManager.
-            ConnectionStrings["DefaultConnection"].ConnectionString);
+            
             //_dbConnection.Open();
         }
 
         static List<Group> LoadGroups()
         {
+            var DbConnection =
+            new SQLiteConnection(ConfigurationManager.
+            ConnectionStrings["DefaultConnection"].ConnectionString);
+
             // Ensure we have a connection
-            if (_dbConnection == null)
+            if (DbConnection == null)
             {
                 throw new NullReferenceException("Please provide a connection");
             }
 
-            using (_dbConnection)
+            using (DbConnection)
             {
-                return _dbConnection.Query<Group>
+                return DbConnection.Query<Group>
                     ("Select * From Groups").ToList();
             }
         }

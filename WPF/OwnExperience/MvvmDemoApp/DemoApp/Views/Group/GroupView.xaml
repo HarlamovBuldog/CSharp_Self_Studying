@@ -79,12 +79,21 @@
       HorizontalAlignment="Right"
       Target="{Binding ElementName=imagePath}" 
       />
-        <TextBox 
-      x:Name="imagePath"
-      Grid.Row="4" Grid.Column="2" 
-      Text="{Binding Path=ImgPath, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-      Validation.ErrorTemplate="{x:Null}"
-      />
+        <DockPanel Grid.Row="4" Grid.Column="2">
+            <Button DockPanel.Dock="Right"
+                Command="{Binding Path=OpenFileDialogCommand}"
+                  Content="_Browse..."
+                  HorizontalAlignment="Right"
+                  Margin="4,2" 
+                  MinWidth="60"     
+                    />
+            <TextBox IsEnabled="False"
+              x:Name="imagePath" 
+              Text="{Binding Path=ImgPath, ValidatesOnDataErrors=True, 
+                UpdateSourceTrigger=PropertyChanged}"
+              Validation.ErrorTemplate="{x:Null}"
+            />
+        </DockPanel>
         <ContentPresenter 
       Grid.Row="5" Grid.Column="2"
       Content="{Binding ElementName=imagePath, Path=(Validation.Errors).CurrentItem}"

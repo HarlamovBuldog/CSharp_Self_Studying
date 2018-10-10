@@ -32,16 +32,21 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <!-- Radio button template was changed
-                    You can find its changed template in MainWindowResources.xaml-->
+                    You can find its changed template in MainWindowResources.xaml
+                    Content="{Binding DisplayName}"-->
                     <RadioButton bh:MouseDoubleClickBehaviour.Command=
                                 "{Binding ChildsNavigateExecute}" 
                         BorderBrush="Black"
-                        Content="{Binding DisplayName}"
                         Margin="5 5 5 5" 
                         Height="70" Width="120"
                         IsChecked="{Binding Path=IsSelected, 
-                                   RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"        
+                                   RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
                                 >
+                        <Grid>
+                            <Image Source="pack://application:,,,/Resources/banknote.png" 
+                               />
+                            <TextBlock Text="{Binding DisplayName}" />
+                        </Grid>
                     </RadioButton>
                 </DataTemplate>
             </ListBox.ItemTemplate>

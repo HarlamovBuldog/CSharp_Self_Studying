@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows.Input;
 using DemoApp.DataAccess;
 using DemoApp.Model;
 using DemoApp.Properties;
+using Microsoft.Win32;
 
 namespace DemoApp.ViewModel
 {
@@ -20,6 +22,7 @@ namespace DemoApp.ViewModel
         //string[] _groupTypeOptions;
         bool _isSelected;
         RelayCommand _saveCommand;
+        RelayCommand _openFileDialogCommand;
 
         #endregion // Fields
 
@@ -138,6 +141,20 @@ namespace DemoApp.ViewModel
             }
         }
 
+        public ICommand OpenFileDialogCommand
+        {
+            get
+            {
+                if (_openFileDialogCommand == null)
+                {
+                    _openFileDialogCommand = new RelayCommand(
+                        param => this.OpenFileDialog()
+                        );
+                }
+                return _openFileDialogCommand;
+            }
+        }
+
         public ICommand ChildsNavigateExecute { get; set; }
 
 
@@ -145,6 +162,14 @@ namespace DemoApp.ViewModel
         #endregion // Presentation Properties
 
         #region Public Methods
+
+        public void OpenFileDialog()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg)|*.png;*.jpeg";
+            if (openFileDialog.ShowDialog() == true)
+                ImgPath = openFileDialog.FileName;
+        }
 
         /// <summary>
         /// Saves the group to the repository.  This method is invoked by the SaveCommand.
