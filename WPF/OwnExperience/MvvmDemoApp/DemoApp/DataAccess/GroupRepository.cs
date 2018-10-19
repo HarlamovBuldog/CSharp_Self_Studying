@@ -69,7 +69,9 @@ namespace DemoApp.DataAccess
                 }
                 using (DbConnection)
                 {
-                    string processQuery = "BEGIN TRANSACTION;INSERT INTO Groups VALUES (@Id, @Name, @ImgPath);COMMIT;";
+                    string processQuery = "BEGIN;" +
+                        "INSERT INTO Groups VALUES (@Id, @Name, @ImgPath);" +
+                        "END TRANSACTION;";
                     DbConnection.Execute(processQuery, group);
                     DbConnection.Close();
                 }
